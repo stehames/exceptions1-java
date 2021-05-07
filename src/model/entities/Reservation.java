@@ -12,14 +12,12 @@ public class Reservation {
 
     private static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
-    //Constructor
     public Reservation(Integer roomNumber, Date checkIn, Date checkOut) {
         this.roomNumber = roomNumber;
         this.checkIn = checkIn;
         this.checkOut = checkOut;
     }
 
-    //Getters and Setters
     public Integer getRoomNumber() {
         return roomNumber;
     }
@@ -36,22 +34,33 @@ public class Reservation {
         return checkOut;
     }
 
-    //Methods
     public long duration() {
         long diff = checkOut.getTime() - checkIn.getTime();
         return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
     }
 
-    public void updateDates(Date checkIn, Date checkOut) {
+    public String updateDates(Date checkIn, Date checkOut) {
+        Date now = new Date("06/06/2018");
+        if (checkIn.before(now) || checkOut.before(now)) {
+            return "Error in reservation: Reservation dates for update must be future dates";
+        } else if (!checkOut.after(checkIn)) {
+            return"Error in reservation: Check-out date must be after check-in date";
+        }
         this.checkIn = checkIn;
         this.checkOut = checkOut;
+        return null;
     }
 
     @Override
     public String toString() {
-        return "Reservation: Room " + roomNumber
-                + ", check-in: " + sdf.format(checkIn)
-                + ", check-out: " + sdf.format(checkOut)
-                + ", " + duration() + " nights";
+        return "Room "
+                + roomNumber
+                + ", check-in: "
+                + sdf.format(checkIn)
+                + ", check-out: "
+                + sdf.format(checkOut)
+                + ", "
+                + duration()
+                + " nights";
     }
 }
